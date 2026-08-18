@@ -189,7 +189,230 @@
   .compare-before{ background:rgba(166,84,58,0.06); }
   .compare-after{ background:rgba(46,125,107,0.08); }
   .compare-tag{ font-size:13px; font-weight:600; margin-bottom:18px; display:inline-block; padding:5px 12px; border-radius:99px; font-family:'IBM Plex Mono',monospace;}
-< truncated lines 192-415 >
+  .compare-before .compare-tag{ background:rgba(166,84,58,0.16); color:#d98a6f; }
+  .compare-after .compare-tag{ background:rgba(46,125,107,0.2); color:var(--teal-bright); }
+  .compare-card ul{ list-style:none; }
+  .compare-card li{ display:flex; gap:10px; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:15px; color:var(--cream-dim); }
+  .compare-card li:last-child{ border-bottom:none; }
+  .compare-card li b{ color:var(--cream); font-weight:500; }
+
+  /* ---------- features ---------- */
+  .features-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .feature{
+    background:var(--card); border:1px solid var(--card-border); border-radius:16px; padding:28px;
+    transition:transform .2s ease, border-color .2s ease;
+  }
+  .feature:hover{ transform:translateY(-4px); border-color:rgba(201,162,39,0.4); }
+  .feature-icon{
+    width:44px; height:44px; border-radius:11px; display:flex; align-items:center; justify-content:center;
+    background:rgba(201,162,39,0.12); color:var(--gold-bright); margin-bottom:18px; font-size:20px;
+  }
+  .feature h3{ font-size:17px; color:var(--cream); margin-bottom:8px; font-weight:700; }
+  .feature p{ font-size:14.5px; color:var(--cream-dim); font-weight:300; }
+
+  /* ---------- pricing ---------- */
+  .pricing-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  .price-card{
+    background:var(--card); border:1px solid var(--card-border); border-radius:18px; padding:34px 28px;
+    display:flex; flex-direction:column;
+  }
+  .price-card.featured{
+    border-color:var(--gold); background:linear-gradient(180deg, rgba(201,162,39,0.09), var(--card) 40%);
+    position:relative;
+  }
+  .featured-badge{
+    position:absolute; top:-13px; right:28px; background:var(--gold-bright); color:#1a1305;
+    font-size:12px; font-weight:700; padding:5px 14px; border-radius:99px; font-family:'IBM Plex Mono',monospace;
+  }
+  .price-plan{ font-size:15px; color:var(--cream-dim); margin-bottom:6px; }
+  .price-name{ font-family:'Cairo',sans-serif; font-weight:800; font-size:22px; margin-bottom:18px; }
+  .price-amt{ display:flex; align-items:baseline; gap:6px; margin-bottom:6px; }
+  .price-amt .num{ font-family:'IBM Plex Mono',monospace; font-size:38px; font-weight:600; color:var(--cream); }
+  .price-amt .cur{ font-size:14px; color:var(--cream-dim); }
+  .price-per{ font-size:13px; color:var(--cream-dim); margin-bottom:26px; }
+  .price-card ul{ list-style:none; margin-bottom:28px; flex-grow:1; }
+  .price-card li{ display:flex; align-items:flex-start; gap:9px; font-size:14.5px; color:var(--cream-dim); padding:8px 0; }
+  .check{ color:var(--teal-bright); flex-shrink:0; margin-top:2px; }
+
+  /* ---------- testimonials ---------- */
+  .testi-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .testi-card{ background:var(--card); border:1px solid var(--card-border); border-radius:16px; padding:26px; }
+  .testi-text{ font-size:15px; color:var(--cream); margin-bottom:20px; font-weight:400; line-height:1.8; }
+  .testi-who{ display:flex; align-items:center; gap:12px; }
+  .testi-avatar{
+    width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg, var(--teal), var(--gold)); font-weight:700; font-size:14px; color:#0f1a17;
+  }
+  .testi-name{ font-size:14px; color:var(--cream); font-weight:600; }
+  .testi-city{ font-size:12.5px; color:var(--cream-dim); font-family:'IBM Plex Mono',monospace; }
+
+  /* ---------- final cta ---------- */
+  .final-cta{
+    background:linear-gradient(135deg, rgba(201,162,39,0.1), rgba(46,125,107,0.1));
+    border:1px solid var(--card-border); border-radius:24px; padding:64px 48px; text-align:center;
+    position:relative; overflow:hidden;
+  }
+  .final-cta h2{ font-size:34px; color:var(--cream); margin-bottom:16px; }
+  .final-cta p{ color:var(--cream-dim); font-size:16px; margin-bottom:32px; }
+  .final-actions{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+
+  /* ---------- footer ---------- */
+  footer{ border-top:1px solid var(--card-border); padding:48px 0 28px; }
+  .foot-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:32px; margin-bottom:36px; }
+  .foot-brand p{ color:var(--cream-dim); font-size:14px; margin-top:12px; max-width:260px; font-weight:300; }
+  .foot-col h4{ font-size:13.5px; color:var(--cream); margin-bottom:14px; font-weight:600; }
+  .foot-col a{ display:block; font-size:14px; color:var(--cream-dim); padding:6px 0; }
+  .foot-col a:hover{ color:var(--gold-bright); }
+  .foot-bottom{
+    display:flex; justify-content:space-between; align-items:center; padding-top:24px;
+    border-top:1px solid var(--card-border); font-size:13px; color:var(--cream-dim); flex-wrap:wrap; gap:12px;
+  }
+
+  /* ---------- reveal on scroll ---------- */
+  .reveal{ opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* ---------- responsive ---------- */
+  @media (max-width:980px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .invoice-stage{ height:440px; margin-top:20px; }
+    .features-grid, .pricing-grid, .testi-grid, .compare{ grid-template-columns:1fr; }
+    .foot-grid{ grid-template-columns:1fr 1fr; }
+    .nav-links{ display:none; }
+    .mobile-only{ display:inline-flex; }
+  }
+  @media (max-width:560px){
+    .hero h1{ font-size:36px; }
+    .hero p.lead{ font-size:16px; }
+    section{ padding:64px 0; }
+    .section-head h2{ font-size:28px; }
+    .foot-grid{ grid-template-columns:1fr; }
+    .invoice-card{ width:88%; right:6%; }
+    .wa-bubble{ width:70%; left:2%; bottom:20px; }
+    .stat-chip{ display:none; }
+    .final-cta{ padding:44px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a href="#" class="logo">
+        <span class="logo-mark">ف</span>
+        فاتورة
+      </a>
+      <div class="nav-links">
+        <a href="#features">المميزات</a>
+        <a href="#pricing">الأسعار</a>
+        <a href="#testimonials">آراء التجّار</a>
+        <a href="#faq">الأسئلة الشائعة</a>
+      </div>
+      <div class="nav-cta">
+        <button type="button" class="link-quiet mobile-only" onclick="showToast('تسجيل الدخول قريباً')">دخول</button>
+        <button type="button" class="link-quiet" style="display:inline-block;background:none;border:none;cursor:pointer;font-family:inherit" onclick="showToast('تسجيل الدخول قريباً')">تسجيل الدخول</button>
+        <button type="button" class="btn btn-primary" onclick="openSignup('تجربة مجانية')">جرّب مجاناً</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="glow" style="width:520px;height:520px;background:var(--gold);opacity:0.12;top:-160px;left:-120px;"></div>
+    <div class="glow" style="width:420px;height:420px;background:var(--teal);opacity:0.14;bottom:-140px;right:0;"></div>
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">مصمم خصيصاً لمحلات وشركات العراق</span>
+        <h1>حوّل دفتر الحسابات إلى <span>فواتير تُرسل بضغطة</span> عبر واتساب</h1>
+        <p class="lead">فاتورة تدير مبيعاتك ومخزونك وحساباتك بالدينار العراقي، وتشتغل حتى لو انقطع الإنترنت. جرّبها اليوم واعرف وين تروح فلوسك.</p>
+        <div class="hero-actions">
+          <button type="button" class="btn btn-primary" onclick="openSignup('تجربة مجانية')">ابدأ تجربتك المجانية — 14 يوم</button>
+          <a href="#demo" class="btn btn-ghost">شاهد كيف تعمل</a>
+        </div>
+        <div class="trust-row">
+          <span><b>+2,400</b> محل وشركة تستخدمها</span>
+          <span class="trust-sep"></span>
+          <span><b>18</b> محافظة عراقية</span>
+          <span class="trust-sep"></span>
+          <span><b>4.8</b> تقييم المستخدمين</span>
+        </div>
+      </div>
+
+      <div class="invoice-stage" aria-hidden="true">
+        <div class="invoice-card">
+          <div class="invoice-head">
+            <div>
+              <div class="shop">سوبرماركت الرافدين</div>
+              <div class="num">فاتورة #IQ-1042</div>
+            </div>
+            <span class="invoice-status">مدفوعة ✓</span>
+          </div>
+          <div class="invoice-line"><span>مواد غذائية متنوعة</span><b>32,000</b></div>
+          <div class="invoice-line"><span>منظفات</span><b>14,500</b></div>
+          <div class="invoice-line"><span>مشروبات</span><b>9,000</b></div>
+          <div class="invoice-total">
+            <span style="font-size:13px;color:var(--cream-dim)">الإجمالي</span>
+            <div><span class="amt">55,500</span><span class="cur">د.ع</span></div>
+          </div>
+        </div>
+
+        <div class="wa-bubble">
+          <div class="wa-head"><span class="wa-dot"></span> تم الإرسال عبر واتساب</div>
+          "فاتورتك جاهزة أستاذ كريم، الإجمالي 55,500 د.ع، شكراً لتعاملكم معنا 🙏"
+        </div>
+
+        <div class="stat-chip">
+          <div class="num">+23٪</div>
+          <div class="lbl">نمو المبيعات الشهرية بعد الاشتراك</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEFORE / AFTER -->
+  <section id="demo">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="section-eyebrow">قبل وبعد</div>
+        <h2>نفس المحل، طريقة عمل مختلفة تماماً</h2>
+        <p>أغلب أصحاب المحلات بالعراق يعتمدون على الذاكرة أو دفتر مبعثر. فاتورة تنظّم كلشي بمكان وحد.</p>
+      </div>
+      <div class="compare">
+        <div class="compare-card compare-before reveal">
+          <span class="compare-tag">بدون فاتورة</span>
+          <ul>
+            <li><b>✕</b> فواتير مكتوبة اليد، تضيع أو تنمحي</li>
+            <li><b>✕</b> ما تعرف شنو باقي بالمخزون إلا لما ينفد</li>
+            <li><b>✕</b> حساب الدين والمبيعات باليوم يوخذ ساعات</li>
+            <li><b>✕</b> الزبون ينتظر وأنت تدوّر بالدفتر</li>
+          </ul>
+        </div>
+        <div class="compare-card compare-after reveal">
+          <span class="compare-tag">مع فاتورة</span>
+          <ul>
+            <li><b>✓</b> فاتورة إلكترونية جاهزة خلال ثوانٍ</li>
+            <li><b>✓</b> تنبيه تلقائي لما ينزل المخزون</li>
+            <li><b>✓</b> تقرير المبيعات والأرباح جاهز يومياً</li>
+            <li><b>✓</b> الفاتورة تنرسل عبر واتساب مباشرة للزبون</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="section-eyebrow">المميزات</div>
+        <h2>كل شي يحتاجه محلك بمكان وحد</h2>
+        <p>من الفوترة للمخزون للتقارير، مصمم ليتماشى مع طريقة عمل التاجر العراقي.</p>
+      </div>
       <div class="features-grid">
         <div class="feature reveal">
           <div class="feature-icon">⚡</div>
@@ -201,183 +424,4 @@
           <h3>إدارة المخزون</h3>
           <p>تتبّع الكميات لحظة بلحظة، وتنبيهات تلقائية قبل ما ينفد أي منتج من المحل.</p>
         </div>
-        <div class="feature reveal">
-          <div class="feature-icon">📶</div>
-          <h3>يشتغل بدون إنترنت</h3>
-          <p>سجّل فواتيرك حتى بانقطاع النت، وتتزامن البيانات تلقائياً عند عودة الاتصال.</p>
-        </div>
-        <div class="feature reveal">
-          <div class="feature-icon">💰</div>
-          <h3>حسابات بالدينار العراقي</h3>
-          <p>كل الأرقام والتقارير مصممة للدينار العراقي، بدون تعقيد تحويل عملات.</p>
-        </div>
-        <div class="feature reveal">
-          <div class="feature-icon">📊</div>
-          <h3>تقارير يومية واضحة</h3>
-          <p>اعرف أرباحك ومبيعاتك اليومية والشهرية بلمحة واحدة، بدون حسبة يدوية.</p>
-        </div>
-        <div class="feature reveal">
-          <div class="feature-icon">👥</div>
-          <h3>صلاحيات للموظفين</h3>
-          <p>أضف موظفينك وحدد كل وحد شنو يشوف ويسوي، براحتك وبأمان تام.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PRICING -->
-  <section id="pricing">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <div class="section-eyebrow">الأسعار</div>
-        <h2>خطط تناسب كل حجم محل</h2>
-        <p>ابدأ مجاناً، وارفع خطتك أي وقت تكبر تجارتك. بدون عقود طويلة الأمد.</p>
-      </div>
-      <div class="pricing-grid">
-        <div class="price-card reveal">
-          <div class="price-plan">للبداية</div>
-          <div class="price-name">أساسي</div>
-          <div class="price-amt"><span class="num">مجاناً</span></div>
-          <div class="price-per">حتى 50 فاتورة شهرياً</div>
-          <ul>
-            <li><span class="check">✓</span> فواتير غير محدودة الشكل</li>
-            <li><span class="check">✓</span> إدارة مخزون لمنتج واحد</li>
-            <li><span class="check">✓</span> إرسال عبر واتساب</li>
-          </ul>
-          <a href="#" class="btn btn-ghost">ابدأ الآن</a>
-        </div>
-        <div class="price-card featured reveal">
-          <span class="featured-badge">الأكثر اختياراً</span>
-          <div class="price-plan">للمحلات النشطة</div>
-          <div class="price-name">احترافي</div>
-          <div class="price-amt"><span class="num">35,000</span><span class="cur">د.ع</span></div>
-          <div class="price-per">شهرياً لكل فرع</div>
-          <ul>
-            <li><span class="check">✓</span> فواتير ومخزون غير محدود</li>
-            <li><span class="check">✓</span> تقارير وأرباح يومية</li>
-            <li><span class="check">✓</span> حتى 3 موظفين</li>
-            <li><span class="check">✓</span> دعم فني عبر واتساب</li>
-          </ul>
-          <a href="#" class="btn btn-primary">جرّب 14 يوم مجاناً</a>
-        </div>
-        <div class="price-card reveal">
-          <div class="price-plan">للشركات والفروع المتعددة</div>
-          <div class="price-name">مؤسسات</div>
-          <div class="price-amt"><span class="num">حسب الطلب</span></div>
-          <div class="price-per">فروع وموظفين غير محدودين</div>
-          <ul>
-            <li><span class="check">✓</span> كل مميزات الاحترافي</li>
-            <li><span class="check">✓</span> ربط بين عدة فروع</li>
-            <li><span class="check">✓</span> مدير حساب مخصص</li>
-          </ul>
-          <a href="#" class="btn btn-ghost">تواصل معنا</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TESTIMONIALS -->
-  <section id="testimonials">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <div class="section-eyebrow">آراء التجار</div>
-        <h2>تجار من كل العراق يثقون بفاتورة</h2>
-      </div>
-      <div class="testi-grid">
-        <div class="testi-card reveal">
-          <p class="testi-text">"صرت أعرف أرباحي كل يوم بدل ما أنتظر آخر الشهر. وفرت علي وقت كبير بالمحل."</p>
-          <div class="testi-who">
-            <div class="testi-avatar">ح.ك</div>
-            <div>
-              <div class="testi-name">حيدر كاظم</div>
-              <div class="testi-city">صاحب سوبرماركت، بغداد</div>
-            </div>
-          </div>
-        </div>
-        <div class="testi-card reveal">
-          <p class="testi-text">"إرسال الفاتورة عبر واتساب خلّى الزبون يثق فينا أكثر، وصرنا نبدو محل منظّم."</p>
-          <div class="testi-who">
-            <div class="testi-avatar">ن.س</div>
-            <div>
-              <div class="testi-name">نور السعدي</div>
-              <div class="testi-city">صاحبة محل ملابس، البصرة</div>
-            </div>
-          </div>
-        </div>
-        <div class="testi-card reveal">
-          <p class="testi-text">"كنت أخاف من التقنية بس التطبيق سهل وباللهجة العراقية. تعلمته بيوم وحد."</p>
-          <div class="testi-who">
-            <div class="testi-avatar">ع.ي</div>
-            <div>
-              <div class="testi-name">عمر ياسين</div>
-              <div class="testi-city">صاحب صيدلية، أربيل</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FINAL CTA -->
-  <section>
-    <div class="wrap">
-      <div class="final-cta reveal">
-        <h2>جاهز تنظّم فواتير محلك اليوم؟</h2>
-        <p>سجّل خلال دقيقتين وابدأ تجربتك المجانية، بدون بطاقة ائتمان.</p>
-        <div class="final-actions">
-          <a href="#pricing" class="btn btn-primary">ابدأ تجربتك المجانية</a>
-          <a href="#" class="btn btn-ghost">تحدّث معنا على واتساب</a>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
-
-<footer id="faq">
-  <div class="wrap">
-    <div class="foot-grid">
-      <div class="foot-brand">
-        <a href="#" class="logo">
-          <span class="logo-mark">ف</span>
-          فاتورة
-        </a>
-        <p>منصة عراقية لإدارة الفواتير والمخزون والمبيعات، مصممة لتناسب طريقة عمل التاجر المحلي.</p>
-      </div>
-      <div class="foot-col">
-        <h4>المنتج</h4>
-        <a href="#features">المميزات</a>
-        <a href="#pricing">الأسعار</a>
-        <a href="#demo">شاهد العرض</a>
-      </div>
-      <div class="foot-col">
-        <h4>الشركة</h4>
-        <a href="#">من نحن</a>
-        <a href="#">وظائف</a>
-        <a href="#">تواصل معنا</a>
-      </div>
-      <div class="foot-col">
-        <h4>الدعم</h4>
-        <a href="#">مركز المساعدة</a>
-        <a href="#">واتساب الدعم</a>
-        <a href="#">سياسة الخصوصية</a>
-      </div>
-    </div>
-    <div class="foot-bottom">
-      <span>© 2026 فاتورة. جميع الحقوق محفوظة.</span>
-      <span>صُنع بحب في العراق 🇮🇶</span>
-    </div>
-  </div>
-</footer>
-
-<script>
-  const revealEls = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
-    });
-  }, { threshold:0.15 });
-  revealEls.forEach(el=>io.observe(el));
-</script>
-
-</body>
-</html>
+     
