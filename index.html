@@ -3,1245 +3,380 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نظام إدارة الطلبات</title>
-
+<title>فاتورة — إدارة محلك وفواتيرك بسهولة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box}
+  :root{
+    --bg: #0f1a17;
+    --bg-soft: #142420;
+    --card: #16241f;
+    --card-border: #24382f;
+    --gold: #c9a227;
+    --gold-bright: #e0bb3f;
+    --teal: #2e7d6b;
+    --teal-bright: #45a88f;
+    --cream: #f2ede4;
+    --cream-dim: #b9b3a5;
+    --danger: #a6543a;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--cream);
+    font-family:'IBM Plex Sans Arabic', sans-serif;
+    font-weight:400;
+    line-height:1.7;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Cairo', sans-serif;
+    font-weight:800;
+    letter-spacing:-0.01em;
+  }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:inherit; text-decoration:none; }
+  img,svg{ display:block; max-width:100%; }
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 24px; }
+  .visually-hidden{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
 
-body{
-    margin:0;
-    font-family:Tahoma,Arial,sans-serif;
-    background:#f5f7fb;
-    color:#1f2937;
-}
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--gold-bright);
+    outline-offset:3px;
+    border-radius:4px;
+  }
 
-.sidebar{
-    position:fixed;
-    right:0;
-    top:0;
-    bottom:0;
-    width:230px;
-    background:#111827;
-    color:white;
-    padding:25px 15px;
-}
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
+  }
 
-.logo{
-    font-size:22px;
-    font-weight:bold;
-    margin-bottom:30px;
-}
+  /* ---------- background texture ---------- */
+  .grain{
+    position:fixed; inset:0; pointer-events:none; z-index:0; opacity:0.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .glow{
+    position:absolute; border-radius:50%; filter:blur(90px); pointer-events:none; z-index:0;
+  }
 
-.nav button{
-    width:100%;
-    border:0;
-    background:transparent;
-    color:#d1d5db;
-    padding:13px;
-    margin-bottom:7px;
-    border-radius:9px;
-    text-align:right;
-    cursor:pointer;
-}
+  /* ---------- nav ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(15,26,23,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--card-border);
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 0;
+  }
+  .logo{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Cairo', sans-serif; font-weight:900; font-size:22px; color:var(--cream);
+  }
+  .logo-mark{
+    width:34px; height:34px; border-radius:9px;
+    background:linear-gradient(135deg, var(--gold), var(--gold-bright));
+    display:flex; align-items:center; justify-content:center;
+    color:var(--bg); font-weight:900; font-size:16px;
+  }
+  .nav-links{ display:flex; gap:32px; font-size:15px; color:var(--cream-dim); }
+  .nav-links a:hover{ color:var(--gold-bright); }
+  .nav-cta{
+    display:flex; align-items:center; gap:14px;
+  }
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:11px 22px; border-radius:9px; font-weight:600; font-size:14.5px;
+    cursor:pointer; border:1px solid transparent; transition:transform .15s ease, background .2s ease, border-color .2s ease;
+  }
+  .btn-primary{ background:linear-gradient(135deg, var(--gold-bright), var(--gold)); color:#1a1305; }
+  .btn-primary:hover{ transform:translateY(-2px); }
+  .btn-ghost{ border-color:var(--card-border); color:var(--cream); }
+  .btn-ghost:hover{ border-color:var(--gold); color:var(--gold-bright); }
+  .link-quiet{ color:var(--cream-dim); font-size:14.5px; }
+  .link-quiet:hover{ color:var(--cream); }
+  .mobile-only{ display:none; }
 
-.nav button:hover,
-.nav button.active{
-    background:#2563eb;
-    color:white;
-}
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative; padding:88px 0 60px; overflow:hidden;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center;
+    position:relative; z-index:1;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:13px; color:var(--gold-bright); border:1px solid rgba(201,162,39,0.35);
+    background:rgba(201,162,39,0.08); padding:7px 14px; border-radius:99px; margin-bottom:22px;
+  }
+  .eyebrow::before{ content:"●"; font-size:8px; color:var(--teal-bright); }
+  .hero h1{
+    font-size:52px; line-height:1.22; color:var(--cream); margin-bottom:22px;
+  }
+  .hero h1 span{ color:var(--gold-bright); }
+  .hero p.lead{
+    font-size:18px; color:var(--cream-dim); max-width:520px; margin-bottom:34px; font-weight:300;
+  }
+  .hero-actions{ display:flex; align-items:center; gap:18px; flex-wrap:wrap; margin-bottom:38px; }
+  .trust-row{
+    display:flex; align-items:center; gap:22px; flex-wrap:wrap; font-size:13.5px; color:var(--cream-dim);
+  }
+  .trust-row b{ color:var(--cream); font-family:'IBM Plex Mono', monospace; font-weight:600; }
+  .trust-sep{ width:1px; height:16px; background:var(--card-border); }
 
-.main{
-    margin-right:230px;
-    padding:25px;
-}
+  /* invoice signature card */
+  .invoice-stage{ position:relative; height:520px; }
+  .invoice-card{
+    position:absolute; top:0; right:6%; width:320px;
+    background:var(--card); border:1px solid var(--card-border); border-radius:16px;
+    padding:26px 24px; box-shadow:0 30px 60px -20px rgba(0,0,0,0.6);
+    animation:float 6s ease-in-out infinite;
+  }
+  @keyframes float{ 0%,100%{ transform:translateY(0) rotate(-1.2deg);} 50%{ transform:translateY(-14px) rotate(0.6deg);} }
+  .invoice-head{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; }
+  .invoice-head .shop{ font-family:'Cairo',sans-serif; font-weight:700; font-size:16px; }
+  .invoice-head .num{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--cream-dim); }
+  .invoice-status{
+    display:inline-flex; align-items:center; gap:6px; background:rgba(46,125,107,0.18);
+    color:var(--teal-bright); border:1px solid rgba(46,125,107,0.4); font-size:11.5px;
+    padding:4px 10px; border-radius:99px; font-family:'IBM Plex Mono',monospace;
+  }
+  .invoice-line{
+    display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px dashed var(--card-border);
+    font-size:14px; color:var(--cream-dim);
+  }
+  .invoice-line b{ color:var(--cream); font-weight:500; }
+  .invoice-total{
+    display:flex; justify-content:space-between; align-items:baseline; margin-top:16px; padding-top:14px;
+    border-top:1px solid var(--card-border);
+  }
+  .invoice-total .amt{ font-family:'IBM Plex Mono',monospace; font-size:24px; font-weight:600; color:var(--gold-bright); }
+  .invoice-total .cur{ font-size:12px; color:var(--cream-dim); margin-inline-start:4px; }
 
-.header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
-}
+  .wa-bubble{
+    position:absolute; bottom:60px; left:2%; width:230px;
+    background:var(--card); border:1px solid var(--card-border); border-radius:14px;
+    padding:14px 16px; font-size:13px; color:var(--cream-dim);
+    animation:float 6s ease-in-out infinite 1.4s;
+    box-shadow:0 20px 40px -16px rgba(0,0,0,0.55);
+  }
+  .wa-bubble .wa-head{ display:flex; align-items:center; gap:8px; margin-bottom:8px; color:var(--teal-bright); font-weight:600; font-size:12.5px; }
+  .wa-dot{ width:8px; height:8px; border-radius:50%; background:var(--teal-bright); }
 
-.header h1{
-    margin:0;
-}
+  .stat-chip{
+    position:absolute; top:52%; left:0; width:190px;
+    background:var(--card); border:1px solid var(--card-border); border-radius:14px;
+    padding:16px 18px; animation:float 7s ease-in-out infinite 0.6s;
+    box-shadow:0 20px 40px -16px rgba(0,0,0,0.5);
+  }
+  .stat-chip .num{ font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:600; color:var(--cream); }
+  .stat-chip .lbl{ font-size:12px; color:var(--cream-dim); margin-top:2px; }
 
-.btn{
-    background:#2563eb;
-    color:white;
-    border:0;
-    border-radius:9px;
-    padding:11px 18px;
-    cursor:pointer;
-}
+  /* ---------- section shell ---------- */
+  section{ position:relative; padding:90px 0; }
+  .section-head{ max-width:640px; margin-bottom:52px; }
+  .section-eyebrow{ font-size:13px; color:var(--teal-bright); font-weight:600; margin-bottom:12px; font-family:'IBM Plex Mono',monospace; }
+  .section-head h2{ font-size:36px; color:var(--cream); margin-bottom:14px; line-height:1.35; }
+  .section-head p{ color:var(--cream-dim); font-size:16px; font-weight:300; }
 
-.btn:hover{
-    background:#1d4ed8;
-}
-
-.cards{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:15px;
-    margin-bottom:20px;
-}
-
-.card{
-    background:white;
-    padding:20px;
-    border-radius:14px;
-    box-shadow:0 2px 10px #0000000a;
-}
-
-.card small{
-    color:#6b7280;
-}
-
-.card h2{
-    margin:10px 0 0;
-}
-
-.panel{
-    background:white;
-    padding:20px;
-    border-radius:14px;
-    margin-bottom:20px;
-    box-shadow:0 2px 10px #0000000a;
-}
-
-.toolbar{
-    display:flex;
-    gap:10px;
-    margin-bottom:15px;
-}
-
-input,select,textarea{
-    width:100%;
-    padding:11px;
-    border:1px solid #d1d5db;
-    border-radius:8px;
-    outline:none;
-}
-
-.search{
-    flex:1;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:13px 8px;
-    border-bottom:1px solid #eee;
-    text-align:right;
-}
-
-th{
-    color:#6b7280;
-}
-
-.badge{
-    padding:5px 9px;
-    border-radius:20px;
-    font-size:12px;
-}
-
-.new{
-    background:#dbeafe;
-    color:#1d4ed8;
-}
-
-.confirm{
-    background:#fef3c7;
-    color:#92400e;
-}
-
-.shipping{
-    background:#ede9fe;
-    color:#6d28d9;
-}
-
-.done{
-    background:#dcfce7;
-    color:#166534;
-}
-
-.cancel{
-    background:#fee2e2;
-    color:#991b1b;
-}
-
-.action{
-    border:0;
-    padding:7px 10px;
-    border-radius:7px;
-    cursor:pointer;
-    margin-left:4px;
-}
-
-.edit{
-    background:#e0e7ff;
-    color:#3730a3;
-}
-
-.delete{
-    background:#fee2e2;
-    color:#991b1b;
-}
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:#0008;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:15px;
-}
-
-.modal.show{
-    display:flex;
-}
-
-.modal-box{
-    background:white;
-    width:100%;
-    max-width:650px;
-    max-height:90vh;
-    overflow:auto;
-    border-radius:15px;
-    padding:25px;
-}
-
-.modal-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
-}
-
-.close{
-    border:0;
-    background:#eee;
-    width:35px;
-    height:35px;
-    border-radius:50%;
-    cursor:pointer;
-}
-
-.form-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-}
-
-.form-group{
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-}
-
-.full{
-    grid-column:1/-1;
-}
-
-.modal-buttons{
-    display:flex;
-    gap:10px;
-    margin-top:20px;
-}
-
-.cancel-btn{
-    background:#e5e7eb;
-    color:#111827;
-}
-
-.empty{
-    text-align:center;
-    padding:30px;
-    color:#777;
-}
-
-@media(max-width:900px){
-    .cards{
-        grid-template-columns:1fr 1fr;
-    }
-}
-
-@media(max-width:650px){
-    .sidebar{
-        position:static;
-        width:100%;
-    }
-
-    .main{
-        margin:0;
-        padding:15px;
-    }
-
-    .cards{
-        grid-template-columns:1fr 1fr;
-    }
-
-    .form-grid{
-        grid-template-columns:1fr;
-    }
-
-    .full{
-        grid-column:auto;
-    }
-
-    .toolbar{
-        flex-direction:column;
-    }
-
-    table{
-        min-width:750px;
-    }
-
-    .table-container{
-        overflow:auto;
-    }
-}
-</style>
-</head>
-
-<body>
-
-<div class="sidebar">
-
-    <div class="logo">
-        📦 إدارة الطلبات
+  /* ---------- before/after ---------- */
+  .compare{ display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .compare-card{ border-radius:16px; padding:32px; border:1px solid var(--card-border); }
+  .compare-before{ background:rgba(166,84,58,0.06); }
+  .compare-after{ background:rgba(46,125,107,0.08); }
+  .compare-tag{ font-size:13px; font-weight:600; margin-bottom:18px; display:inline-block; padding:5px 12px; border-radius:99px; font-family:'IBM Plex Mono',monospace;}
+< truncated lines 192-415 >
+      <div class="features-grid">
+        <div class="feature reveal">
+          <div class="feature-icon">⚡</div>
+          <h3>فوترة بثوانٍ</h3>
+          <p>أنشئ فاتورة احترافية وأرسلها عبر واتساب أو اطبعها مباشرة من الهاتف أو الحاسوب.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="feature-icon">📦</div>
+          <h3>إدارة المخزون</h3>
+          <p>تتبّع الكميات لحظة بلحظة، وتنبيهات تلقائية قبل ما ينفد أي منتج من المحل.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="feature-icon">📶</div>
+          <h3>يشتغل بدون إنترنت</h3>
+          <p>سجّل فواتيرك حتى بانقطاع النت، وتتزامن البيانات تلقائياً عند عودة الاتصال.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="feature-icon">💰</div>
+          <h3>حسابات بالدينار العراقي</h3>
+          <p>كل الأرقام والتقارير مصممة للدينار العراقي، بدون تعقيد تحويل عملات.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="feature-icon">📊</div>
+          <h3>تقارير يومية واضحة</h3>
+          <p>اعرف أرباحك ومبيعاتك اليومية والشهرية بلمحة واحدة، بدون حسبة يدوية.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="feature-icon">👥</div>
+          <h3>صلاحيات للموظفين</h3>
+          <p>أضف موظفينك وحدد كل وحد شنو يشوف ويسوي، براحتك وبأمان تام.</p>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <div class="nav">
-
-        <button class="active" onclick="showOrders(this)">
-            📋 الطلبات
-        </button>
-
-        <button onclick="showDashboard(this)">
-            📊 لوحة التحكم
-        </button>
-
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="section-eyebrow">الأسعار</div>
+        <h2>خطط تناسب كل حجم محل</h2>
+        <p>ابدأ مجاناً، وارفع خطتك أي وقت تكبر تجارتك. بدون عقود طويلة الأمد.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="price-card reveal">
+          <div class="price-plan">للبداية</div>
+          <div class="price-name">أساسي</div>
+          <div class="price-amt"><span class="num">مجاناً</span></div>
+          <div class="price-per">حتى 50 فاتورة شهرياً</div>
+          <ul>
+            <li><span class="check">✓</span> فواتير غير محدودة الشكل</li>
+            <li><span class="check">✓</span> إدارة مخزون لمنتج واحد</li>
+            <li><span class="check">✓</span> إرسال عبر واتساب</li>
+          </ul>
+          <a href="#" class="btn btn-ghost">ابدأ الآن</a>
+        </div>
+        <div class="price-card featured reveal">
+          <span class="featured-badge">الأكثر اختياراً</span>
+          <div class="price-plan">للمحلات النشطة</div>
+          <div class="price-name">احترافي</div>
+          <div class="price-amt"><span class="num">35,000</span><span class="cur">د.ع</span></div>
+          <div class="price-per">شهرياً لكل فرع</div>
+          <ul>
+            <li><span class="check">✓</span> فواتير ومخزون غير محدود</li>
+            <li><span class="check">✓</span> تقارير وأرباح يومية</li>
+            <li><span class="check">✓</span> حتى 3 موظفين</li>
+            <li><span class="check">✓</span> دعم فني عبر واتساب</li>
+          </ul>
+          <a href="#" class="btn btn-primary">جرّب 14 يوم مجاناً</a>
+        </div>
+        <div class="price-card reveal">
+          <div class="price-plan">للشركات والفروع المتعددة</div>
+          <div class="price-name">مؤسسات</div>
+          <div class="price-amt"><span class="num">حسب الطلب</span></div>
+          <div class="price-per">فروع وموظفين غير محدودين</div>
+          <ul>
+            <li><span class="check">✓</span> كل مميزات الاحترافي</li>
+            <li><span class="check">✓</span> ربط بين عدة فروع</li>
+            <li><span class="check">✓</span> مدير حساب مخصص</li>
+          </ul>
+          <a href="#" class="btn btn-ghost">تواصل معنا</a>
+        </div>
+      </div>
     </div>
+  </section>
 
-</div>
-
-
-<div class="main">
-
-    <!-- الطلبات -->
-
-    <section id="ordersSection">
-
-        <div class="header">
-
-            <h1>الطلبات</h1>
-
-            <button class="btn" onclick="openModal()">
-                + إضافة طلب
-            </button>
-
+  <!-- TESTIMONIALS -->
+  <section id="testimonials">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="section-eyebrow">آراء التجار</div>
+        <h2>تجار من كل العراق يثقون بفاتورة</h2>
+      </div>
+      <div class="testi-grid">
+        <div class="testi-card reveal">
+          <p class="testi-text">"صرت أعرف أرباحي كل يوم بدل ما أنتظر آخر الشهر. وفرت علي وقت كبير بالمحل."</p>
+          <div class="testi-who">
+            <div class="testi-avatar">ح.ك</div>
+            <div>
+              <div class="testi-name">حيدر كاظم</div>
+              <div class="testi-city">صاحب سوبرماركت، بغداد</div>
+            </div>
+          </div>
         </div>
-
-
-        <div class="cards">
-
-            <div class="card">
-                <small>كل الطلبات</small>
-                <h2 id="totalOrders">0</h2>
+        <div class="testi-card reveal">
+          <p class="testi-text">"إرسال الفاتورة عبر واتساب خلّى الزبون يثق فينا أكثر، وصرنا نبدو محل منظّم."</p>
+          <div class="testi-who">
+            <div class="testi-avatar">ن.س</div>
+            <div>
+              <div class="testi-name">نور السعدي</div>
+              <div class="testi-city">صاحبة محل ملابس، البصرة</div>
             </div>
-
-            <div class="card">
-                <small>طلبات جديدة</small>
-                <h2 id="newOrders">0</h2>
-            </div>
-
-            <div class="card">
-                <small>تم التسليم</small>
-                <h2 id="completedOrders">0</h2>
-            </div>
-
-            <div class="card">
-                <small>إجمالي المبيعات</small>
-                <h2 id="totalSales">0 د.ع</h2>
-            </div>
-
+          </div>
         </div>
-
-
-        <div class="panel">
-
-            <div class="toolbar">
-
-                <input
-                    id="search"
-                    class="search"
-                    placeholder="ابحث باسم العميل أو الهاتف..."
-                    oninput="renderOrders()"
-                >
-
-                <select id="filter" onchange="renderOrders()">
-
-                    <option value="">
-                        كل الحالات
-                    </option>
-
-                    <option value="جديد">
-                        جديد
-                    </option>
-
-                    <option value="مؤكد">
-                        مؤكد
-                    </option>
-
-                    <option value="قيد التجهيز">
-                        قيد التجهيز
-                    </option>
-
-                    <option value="تم الشحن">
-                        تم الشحن
-                    </option>
-
-                    <option value="تم التسليم">
-                        تم التسليم
-                    </option>
-
-                    <option value="ملغي">
-                        ملغي
-                    </option>
-
-                </select>
-
+        <div class="testi-card reveal">
+          <p class="testi-text">"كنت أخاف من التقنية بس التطبيق سهل وباللهجة العراقية. تعلمته بيوم وحد."</p>
+          <div class="testi-who">
+            <div class="testi-avatar">ع.ي</div>
+            <div>
+              <div class="testi-name">عمر ياسين</div>
+              <div class="testi-city">صاحب صيدلية، أربيل</div>
             </div>
-
+          </div>
         </div>
-
-
-        <div class="panel table-container">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>رقم الطلب</th>
-                        <th>العميل</th>
-                        <th>الهاتف</th>
-                        <th>المحافظة</th>
-                        <th>الإجمالي</th>
-                        <th>الحالة</th>
-                        <th>الإجراءات</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="ordersTable">
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </section>
-
-
-    <!-- لوحة التحكم -->
-
-    <section id="dashboardSection" style="display:none">
-
-        <div class="header">
-
-            <h1>لوحة التحكم</h1>
-
-        </div>
-
-        <div class="cards">
-
-            <div class="card">
-                <small>إجمالي الطلبات</small>
-                <h2 id="dashboardTotal">0</h2>
-            </div>
-
-            <div class="card">
-                <small>الطلبات قيد التنفيذ</small>
-                <h2 id="dashboardPending">0</h2>
-            </div>
-
-            <div class="card">
-                <small>تم التسليم</small>
-                <h2 id="dashboardDone">0</h2>
-            </div>
-
-            <div class="card">
-                <small>إجمالي المبيعات</small>
-                <h2 id="dashboardSales">0 د.ع</h2>
-            </div>
-
-        </div>
-
-        <div class="panel">
-
-            <h3>حالات الطلبات</h3>
-
-            <p>
-                جديد:
-                <b id="sNew">0</b>
-            </p>
-
-            <p>
-                مؤكد:
-                <b id="sConfirm">0</b>
-            </p>
-
-            <p>
-                قيد التجهيز:
-                <b id="sPreparing">0</b>
-            </p>
-
-            <p>
-                تم الشحن:
-                <b id="sShipping">0</b>
-            </p>
-
-            <p>
-                تم التسليم:
-                <b id="sDone">0</b>
-            </p>
-
-            <p>
-                ملغي:
-                <b id="sCancel">0</b>
-            </p>
-
-        </div>
-
-    </section>
-
-</div>
-
-
-<!-- نافذة إضافة الطلب -->
-
-<div class="modal" id="orderModal">
-
-    <div class="modal-box">
-
-        <div class="modal-header">
-
-            <h2 id="modalTitle">
-                إضافة طلب
-            </h2>
-
-            <button class="close" onclick="closeModal()">
-                ×
-            </button>
-
-        </div>
-
-
-        <form id="orderForm" onsubmit="saveOrder(event)">
-
-            <input type="hidden" id="editId">
-
-
-            <div class="form-grid">
-
-                <div class="form-group">
-
-                    <label>
-                        اسم العميل
-                    </label>
-
-                    <input id="customer" required>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        رقم الهاتف
-                    </label>
-
-                    <input id="phone" required>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        المحافظة
-                    </label>
-
-                    <select id="province" required>
-
-                        <option value="">
-                            اختر المحافظة
-                        </option>
-
-                        <option>بغداد</option>
-                        <option>بابل</option>
-                        <option>النجف</option>
-                        <option>كربلاء</option>
-                        <option>البصرة</option>
-                        <option>ذي قار</option>
-                        <option>ميسان</option>
-                        <option>واسط</option>
-                        <option>القادسية</option>
-                        <option>المثنى</option>
-                        <option>الأنبار</option>
-                        <option>ديالى</option>
-                        <option>صلاح الدين</option>
-                        <option>كركوك</option>
-                        <option>نينوى</option>
-                        <option>أربيل</option>
-                        <option>دهوك</option>
-                        <option>السليمانية</option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        اسم المنتج
-                    </label>
-
-                    <input id="product">
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        الكمية
-                    </label>
-
-                    <input
-                        id="quantity"
-                        type="number"
-                        value="1"
-                        min="1"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        سعر المنتج
-                    </label>
-
-                    <input
-                        id="price"
-                        type="number"
-                        value="0"
-                        min="0"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        أجور التوصيل
-                    </label>
-
-                    <input
-                        id="delivery"
-                        type="number"
-                        value="3000"
-                        min="0"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        الحالة
-                    </label>
-
-                    <select id="status">
-
-                        <option>جديد</option>
-                        <option>مؤكد</option>
-                        <option>قيد التجهيز</option>
-                        <option>تم الشحن</option>
-                        <option>تم التسليم</option>
-                        <option>ملغي</option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group full">
-
-                    <label>
-                        العنوان
-                    </label>
-
-                    <textarea
-                        id="address"
-                        rows="2"
-                    ></textarea>
-
-                </div>
-
-
-                <div class="form-group full">
-
-                    <label>
-                        ملاحظات
-                    </label>
-
-                    <textarea
-                        id="notes"
-                        rows="2"
-                    ></textarea>
-
-                </div>
-
-            </div>
-
-
-            <div class="modal-buttons">
-
-                <button class="btn" type="submit">
-                    حفظ الطلب
-                </button>
-
-                <button
-                    class="btn cancel-btn"
-                    type="button"
-                    onclick="closeModal()"
-                >
-                    إلغاء
-                </button>
-
-            </div>
-
-        </form>
-
+      </div>
     </div>
+  </section>
 
-</div>
+  <!-- FINAL CTA -->
+  <section>
+    <div class="wrap">
+      <div class="final-cta reveal">
+        <h2>جاهز تنظّم فواتير محلك اليوم؟</h2>
+        <p>سجّل خلال دقيقتين وابدأ تجربتك المجانية، بدون بطاقة ائتمان.</p>
+        <div class="final-actions">
+          <a href="#pricing" class="btn btn-primary">ابدأ تجربتك المجانية</a>
+          <a href="#" class="btn btn-ghost">تحدّث معنا على واتساب</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
 
+<footer id="faq">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="#" class="logo">
+          <span class="logo-mark">ف</span>
+          فاتورة
+        </a>
+        <p>منصة عراقية لإدارة الفواتير والمخزون والمبيعات، مصممة لتناسب طريقة عمل التاجر المحلي.</p>
+      </div>
+      <div class="foot-col">
+        <h4>المنتج</h4>
+        <a href="#features">المميزات</a>
+        <a href="#pricing">الأسعار</a>
+        <a href="#demo">شاهد العرض</a>
+      </div>
+      <div class="foot-col">
+        <h4>الشركة</h4>
+        <a href="#">من نحن</a>
+        <a href="#">وظائف</a>
+        <a href="#">تواصل معنا</a>
+      </div>
+      <div class="foot-col">
+        <h4>الدعم</h4>
+        <a href="#">مركز المساعدة</a>
+        <a href="#">واتساب الدعم</a>
+        <a href="#">سياسة الخصوصية</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 فاتورة. جميع الحقوق محفوظة.</span>
+      <span>صُنع بحب في العراق 🇮🇶</span>
+    </div>
+  </div>
+</footer>
 
 <script>
-
-let orders =
-JSON.parse(localStorage.getItem("orders")) || [];
-
-
-function saveData(){
-
-    localStorage.setItem(
-        "orders",
-        JSON.stringify(orders)
-    );
-
-}
-
-
-function money(number){
-
-    return Number(number || 0).toLocaleString("ar-IQ")
-    + " د.ع";
-
-}
-
-
-function openModal(){
-
-    document.getElementById("orderModal")
-    .classList.add("show");
-
-    document.getElementById("orderForm").reset();
-
-    document.getElementById("editId").value = "";
-
-    document.getElementById("modalTitle").innerText =
-    "إضافة طلب";
-
-}
-
-
-function closeModal(){
-
-    document.getElementById("orderModal")
-    .classList.remove("show");
-
-}
-
-
-function saveOrder(event){
-
-    event.preventDefault();
-
-
-    const editId =
-    document.getElementById("editId").value;
-
-
-    const customer =
-    document.getElementById("customer").value;
-
-    const phone =
-    document.getElementById("phone").value;
-
-    const province =
-    document.getElementById("province").value;
-
-    const product =
-    document.getElementById("product").value;
-
-    const quantity =
-    Number(document.getElementById("quantity").value);
-
-    const price =
-    Number(document.getElementById("price").value);
-
-    const delivery =
-    Number(document.getElementById("delivery").value);
-
-    const status =
-    document.getElementById("status").value;
-
-    const address =
-    document.getElementById("address").value;
-
-    const notes =
-    document.getElementById("notes").value;
-
-
-    const total =
-    quantity * price + delivery;
-
-
-    const order = {
-
-        id: editId
-        ? Number(editId)
-        : Date.now(),
-
-        customer,
-        phone,
-        province,
-        product,
-        quantity,
-        price,
-        delivery,
-        total,
-        status,
-        address,
-        notes
-
-    };
-
-
-    if(editId){
-
-        orders =
-        orders.map(item =>
-            item.id === Number(editId)
-            ? order
-            : item
-        );
-
-    }else{
-
-        orders.unshift(order);
-
-    }
-
-
-    saveData();
-
-    closeModal();
-
-    renderOrders();
-
-    updateDashboard();
-
-}
-
-
-function renderOrders(){
-
-    const table =
-    document.getElementById("ordersTable");
-
-
-    const search =
-    document.getElementById("search")
-    .value
-    .toLowerCase();
-
-
-    const filter =
-    document.getElementById("filter")
-    .value;
-
-
-    const filtered =
-    orders.filter(order => {
-
-        const matchesSearch =
-        order.customer.toLowerCase()
-        .includes(search)
-        ||
-        order.phone.includes(search);
-
-        const matchesFilter =
-        !filter ||
-        order.status === filter;
-
-        return matchesSearch &&
-        matchesFilter;
-
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
     });
-
-
-    if(filtered.length === 0){
-
-        table.innerHTML = `
-        <tr>
-        <td colspan="7" class="empty">
-        لا توجد طلبات
-        </td>
-        </tr>
-        `;
-
-        return;
-
-    }
-
-
-    table.innerHTML =
-    filtered.map(order => `
-
-        <tr>
-
-            <td>
-                #${order.id}
-            </td>
-
-            <td>
-                ${escapeHtml(order.customer)}
-            </td>
-
-            <td>
-                ${escapeHtml(order.phone)}
-            </td>
-
-            <td>
-                ${escapeHtml(order.province)}
-            </td>
-
-            <td>
-                ${money(order.total)}
-            </td>
-
-            <td>
-                <span class="badge ${statusClass(order.status)}">
-                    ${order.status}
-                </span>
-            </td>
-
-            <td>
-
-                <button
-                    class="action edit"
-                    onclick="editOrder(${order.id})"
-                >
-                    تعديل
-                </button>
-
-                <button
-                    class="action delete"
-                    onclick="deleteOrder(${order.id})"
-                >
-                    حذف
-                </button>
-
-            </td>
-
-        </tr>
-
-    `).join("");
-
-}
-
-
-function statusClass(status){
-
-    if(status === "جديد")
-        return "new";
-
-    if(status === "مؤكد")
-        return "confirm";
-
-    if(status === "تم الشحن")
-        return "shipping";
-
-    if(status === "تم التسليم")
-        return "done";
-
-    if(status === "ملغي")
-        return "cancel";
-
-    return "confirm";
-
-}
-
-
-function editOrder(id){
-
-    const order =
-    orders.find(item => item.id === id);
-
-
-    if(!order) return;
-
-
-    document.getElementById("editId").value =
-    order.id;
-
-    document.getElementById("customer").value =
-    order.customer;
-
-    document.getElementById("phone").value =
-    order.phone;
-
-    document.getElementById("province").value =
-    order.province;
-
-    document.getElementById("product").value =
-    order.product;
-
-    document.getElementById("quantity").value =
-    order.quantity;
-
-    document.getElementById("price").value =
-    order.price;
-
-    document.getElementById("delivery").value =
-    order.delivery;
-
-    document.getElementById("status").value =
-    order.status;
-
-    document.getElementById("address").value =
-    order.address;
-
-    document.getElementById("notes").value =
-    order.notes;
-
-
-    document.getElementById("modalTitle").innerText =
-    "تعديل الطلب";
-
-
-    document.getElementById("orderModal")
-    .classList.add("show");
-
-}
-
-
-function deleteOrder(id){
-
-    if(!confirm("هل تريد حذف هذا الطلب؟"))
-        return;
-
-
-    orders =
-    orders.filter(item => item.id !== id);
-
-
-    saveData();
-
-    renderOrders();
-
-    updateDashboard();
-
-}
-
-
-function updateDashboard(){
-
-    const total =
-    orders.length;
-
-
-    const newOrders =
-    orders.filter(
-        x => x.status === "جديد"
-    ).length;
-
-
-    const done =
-    orders.filter(
-        x => x.status === "تم التسليم"
-    ).length;
-
-
-    const pending =
-    orders.filter(
-        x =>
-        x.status !== "تم التسليم"
-        &&
-        x.status !== "ملغي"
-    ).length;
-
-
-    const sales =
-    orders
-    .filter(x => x.status !== "ملغي")
-    .reduce(
-        (sum,x) =>
-        sum + Number(x.total),
-        0
-    );
-
-
-    document.getElementById("totalOrders")
-    .innerText = total;
-
-
-    document.getElementById("newOrders")
-    .innerText = newOrders;
-
-
-    document.getElementById("completedOrders")
-    .innerText = done;
-
-
-    document.getElementById("totalSales")
-    .innerText = money(sales);
-
-
-    document.getElementById("dashboardTotal")
-    .innerText = total;
-
-
-    document.getElementById("dashboardPending")
-    .innerText = pending;
-
-
-    document.getElementById("dashboardDone")
-    .innerText = done;
-
-
-    document.getElementById("dashboardSales")
-    .innerText = money(sales);
-
-
-    document.getElementById("sNew")
-    .innerText =
-    orders.filter(x => x.status === "جديد").length;
-
-
-    document.getElementById("sConfirm")
-    .innerText =
-    orders.filter(x => x.status === "مؤكد").length;
-
-
-    document.getElementById("sPreparing")
-    .innerText =
-    orders.filter(x => x.status === "قيد التجهيز").length;
-
-
-    document.getElementById("sShipping")
-    .innerText =
-    orders.filter(x => x.status === "تم الشحن").length;
-
-
-    document.getElementById("sDone")
-    .innerText = done;
-
-
-    document.getElementById("sCancel")
-    .innerText =
-    orders.filter(x => x.status === "ملغي").length;
-
-}
-
-
-function showOrders(button){
-
-    document.getElementById("ordersSection")
-    .style.display = "block";
-
-    document.getElementById("dashboardSection")
-    .style.display = "none";
-
-
-    document.querySelectorAll(".nav button")
-    .forEach(x =>
-        x.classList.remove("active")
-    );
-
-
-    button.classList.add("active");
-
-}
-
-
-function showDashboard(button){
-
-    document.getElementById("ordersSection")
-    .style.display = "none";
-
-    document.getElementById("dashboardSection")
-    .style.display = "block";
-
-
-    document.querySelectorAll(".nav button")
-    .forEach(x =>
-        x.classList.remove("active")
-    );
-
-
-    button.classList.add("active");
-
-
-    updateDashboard();
-
-}
-
-
-function escapeHtml(text){
-
-    return String(text || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-renderOrders();
-
-updateDashboard();
-
+  }, { threshold:0.15 });
+  revealEls.forEach(el=>io.observe(el));
 </script>
 
 </body>
